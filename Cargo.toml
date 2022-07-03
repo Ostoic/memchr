@@ -21,6 +21,7 @@ bench = false
 
 [features]
 default = ["std"]
+aggressive-inline = []
 
 # The 'std' feature permits the memchr crate to use the standard library. This
 # permits this crate to use runtime CPU feature detection to automatically
