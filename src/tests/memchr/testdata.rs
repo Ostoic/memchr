@@ -118,7 +118,7 @@ const MEMCHR_TESTS: &[MemchrTestStatic] = &[
 ];
 
 /// A description of a test on a memchr like function.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone)]
 pub struct MemchrTest {
     /// The thing to search. We use `&str` instead of `&[u8]` because they
@@ -142,7 +142,7 @@ pub struct MemchrTest {
 }
 
 /// Like MemchrTest, but easier to define as a constant.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone)]
 pub struct MemchrTestStatic {
     corpus: &'static str,

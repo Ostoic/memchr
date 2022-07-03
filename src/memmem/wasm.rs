@@ -4,7 +4,7 @@ use crate::memmem::{genericsimd, NeedleInfo};
 
 /// A `v128` accelerated vectorized substring search routine that only works on
 /// small needles.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone, Copy)]
 pub(crate) struct Forward(genericsimd::Forward);
 

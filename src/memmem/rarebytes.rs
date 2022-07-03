@@ -11,7 +11,8 @@
 /// Note that we use `u8` to represent the offsets of the rare bytes in a
 /// needle to reduce space usage. This means that rare byte occurring after the
 /// first 255 bytes in a needle will never be used.
-#[derive(Clone, Copy, Debug, Default)]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
+#[derive(Clone, Copy, Default)]
 pub(crate) struct RareNeedleBytes {
     /// The leftmost offset of the rarest byte in the needle, according to
     /// pre-computed frequency analysis. The "leftmost offset" means that

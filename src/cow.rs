@@ -6,7 +6,7 @@ use core::ops;
 /// byte string" in a way that keeps std/no-std compatibility. That is, in
 /// no-std mode, this type devolves into a simple &[u8] with no owned variant
 /// available. We can't just use a plain Cow because Cow is not in core.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone)]
 pub struct CowBytes<'a>(Imp<'a>);
 
@@ -14,7 +14,7 @@ pub struct CowBytes<'a>(Imp<'a>);
 // Box<[u8]> for our use case, which is 1/3 smaller than the Vec<u8> that
 // a Cow<[u8]> would use.
 #[cfg(feature = "std")]
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone)]
 enum Imp<'a> {
     Borrowed(&'a [u8]),
@@ -22,7 +22,7 @@ enum Imp<'a> {
 }
 
 #[cfg(not(feature = "std"))]
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone)]
 struct Imp<'a>(&'a [u8]);
 

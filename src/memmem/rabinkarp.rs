@@ -106,7 +106,8 @@ pub(crate) fn rfind_with(
 }
 
 /// A hash derived from a needle.
-#[derive(Clone, Copy, Debug, Default)]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
+#[derive(Clone, Copy, Default)]
 pub(crate) struct NeedleHash {
     /// The actual hash.
     hash: Hash,
@@ -159,7 +160,8 @@ impl NeedleHash {
 
 /// A Rabin-Karp hash. This might represent the hash of a needle, or the hash
 /// of a rolling window in the haystack.
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
+#[derive(Clone, Copy, Default, Eq, PartialEq)]
 pub(crate) struct Hash(u32);
 
 impl Hash {

@@ -317,7 +317,7 @@ pub fn rfind(haystack: &[u8], needle: &[u8]) -> Option<usize> {
 ///
 /// `'h` is the lifetime of the haystack while `'n` is the lifetime of the
 /// needle.
-#[derive(Debug)]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 pub struct FindIter<'h, 'n> {
     haystack: &'h [u8],
     prestate: PrefilterState,
@@ -384,7 +384,7 @@ impl<'h, 'n> Iterator for FindIter<'h, 'n> {
 ///
 /// `'h` is the lifetime of the haystack while `'n` is the lifetime of the
 /// needle.
-#[derive(Debug)]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 pub struct FindRevIter<'h, 'n> {
     haystack: &'h [u8],
     finder: FinderRev<'n>,
@@ -459,7 +459,7 @@ impl<'h, 'n> Iterator for FindRevIter<'h, 'n> {
 /// When the `std` feature is enabled, then this type has an `into_owned`
 /// version which permits building a `Finder` that is not connected to
 /// the lifetime of its needle.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone)]
 pub struct Finder<'n> {
     searcher: Searcher<'n>,
@@ -592,7 +592,7 @@ impl<'n> Finder<'n> {
 /// When the `std` feature is enabled, then this type has an `into_owned`
 /// version which permits building a `FinderRev` that is not connected to
 /// the lifetime of its needle.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone)]
 pub struct FinderRev<'n> {
     searcher: SearcherRev<'n>,
@@ -721,7 +721,8 @@ impl<'n> FinderRev<'n> {
 /// A builder is primarily useful for configuring a substring searcher.
 /// Currently, the only configuration exposed is the ability to disable
 /// heuristic prefilters used to speed up certain searches.
-#[derive(Clone, Debug, Default)]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
+#[derive(Clone, Default)]
 pub struct FinderBuilder {
     config: SearcherConfig,
 }
@@ -768,7 +769,7 @@ impl FinderBuilder {
 /// variety of parameters (CPU support, target, needle size, haystack size and
 /// even dynamic properties such as prefilter effectiveness), the actual
 /// algorithm employed to do substring search may change.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone)]
 struct Searcher<'n> {
     /// The actual needle we're searching for.
@@ -792,7 +793,7 @@ struct Searcher<'n> {
 ///
 /// We group these things together because it's useful to be able to hand them
 /// to prefilters or substring algorithms that want them.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone, Copy)]
 pub(crate) struct NeedleInfo {
     /// The offsets of "rare" bytes detected in the needle.
@@ -819,14 +820,15 @@ pub(crate) struct NeedleInfo {
 }
 
 /// Configuration for substring search.
-#[derive(Clone, Copy, Debug, Default)]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
+#[derive(Clone, Copy, Default)]
 struct SearcherConfig {
     /// This permits changing the behavior of the prefilter, since it can have
     /// a variable impact on performance.
     prefilter: Prefilter,
 }
 
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone)]
 enum SearcherKind {
     /// A special case for empty needles. An empty needle always matches, even
@@ -1062,7 +1064,7 @@ impl NeedleInfo {
 /// was done because it adds a lot of code, and more surface area to test. And
 /// in particular, it's not clear whether a prefilter on reverse searching is
 /// worth it. (If you have a compelling use case, please file an issue!)
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone)]
 struct SearcherRev<'n> {
     /// The actual needle we're searching for.
@@ -1073,7 +1075,7 @@ struct SearcherRev<'n> {
     kind: SearcherRevKind,
 }
 
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone)]
 enum SearcherRevKind {
     /// A special case for empty needles. An empty needle always matches, even

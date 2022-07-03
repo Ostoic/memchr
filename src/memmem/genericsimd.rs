@@ -52,7 +52,7 @@ pub(crate) const MAX_NEEDLE_LEN: usize = 32;
 /// The prefilter variant of this has more comments. Also note that we only
 /// implement this for forward searches for now. If you have a compelling use
 /// case for accelerated reverse search, please file an issue.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone, Copy)]
 pub(crate) struct Forward {
     rare1i: u8,

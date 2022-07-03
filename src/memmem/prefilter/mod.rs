@@ -168,7 +168,7 @@ impl core::fmt::Debug for PrefilterFn {
 /// disable its use. Nevertheless, this configuration option gives callers
 /// the ability to disable prefilters if you have knowledge that they won't be
 /// useful.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone, Copy)]
 #[non_exhaustive]
 pub enum Prefilter {
@@ -206,7 +206,7 @@ impl Prefilter {
 /// iterator is treated as a single search.) A prefilter state should only be
 /// created from a `Freqy`. e.g., An inert `Freqy` will produce an inert
 /// `PrefilterState`.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone)]
 pub(crate) struct PrefilterState {
     /// The number of skips that has been executed. This is always 1 greater

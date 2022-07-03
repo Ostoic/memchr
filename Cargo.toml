@@ -20,7 +20,7 @@ name = "memchr"
 bench = false
 
 [features]
-default = ["std", "aggressive-inline", "nosym"]
+default = ["std"]
 aggressive-inline = []
 nosym = []
 

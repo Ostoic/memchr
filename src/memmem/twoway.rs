@@ -3,12 +3,12 @@ use core::cmp;
 use crate::memmem::{prefilter::Pre, util};
 
 /// Two-Way search in the forward direction.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone, Copy)]
 pub(crate) struct Forward(TwoWay);
 
 /// Two-Way search in the reverse direction.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone, Copy)]
 pub(crate) struct Reverse(TwoWay);
 
@@ -47,7 +47,7 @@ pub(crate) struct Reverse(TwoWay);
 ///
 /// This type is wrapped in Forward and Reverse types that expose consistent
 /// forward or reverse APIs.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone, Copy)]
 struct TwoWay {
     /// A small bitset used as a quick prefilter (in addition to the faster
@@ -428,7 +428,7 @@ impl TwoWay {
 /// then we could collapse this case analysis and simplify the algorithm. The
 /// Two-Way paper suggests this is possible, but more reading is required to
 /// grok why the authors didn't pursue that path.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone, Copy)]
 enum Shift {
     Small { period: usize },
@@ -486,7 +486,7 @@ impl Shift {
 }
 
 /// A suffix extracted from a needle along with its period.
-#[derive(Debug)]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 struct Suffix {
     /// The starting position of this suffix.
     ///
@@ -596,7 +596,7 @@ impl Suffix {
 }
 
 /// The kind of suffix to extract.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone, Copy)]
 enum SuffixKind {
     /// Extract the smallest lexicographic suffix from a string.
@@ -616,7 +616,7 @@ enum SuffixKind {
 }
 
 /// The result of comparing corresponding bytes between two suffixes.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone, Copy)]
 enum SuffixOrdering {
     /// This occurs when the given candidate byte indicates that the candidate
@@ -660,7 +660,7 @@ impl SuffixKind {
 /// needle. If a particular byte in the haystack is NOT in this set, then one
 /// can conclude that it is also not in the needle, and thus, one can advance
 /// in the haystack by needle.len() bytes.
-#[cfg_attr(feature = "nosym", derive(Debug))]
+#[cfg_attr(not(feature = "nosym"), derive(Debug))]
 #[derive(Clone, Copy)]
 struct ApproximateByteSet(u64);
 
