@@ -6,7 +6,6 @@
 use libc::{c_int, c_void, size_t};
 
 #[cfg_attr(feature = "aggressive-inline", inline(always))]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr(needle: u8, haystack: &[u8]) -> Option<usize> {
     // SAFETY: This is safe to call since all pointers are valid.
     let p = unsafe {

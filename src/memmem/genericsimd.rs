@@ -52,7 +52,8 @@ pub(crate) const MAX_NEEDLE_LEN: usize = 32;
 /// The prefilter variant of this has more comments. Also note that we only
 /// implement this for forward searches for now. If you have a compelling use
 /// case for accelerated reverse search, please file an issue.
-#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone, Copy)]
 pub(crate) struct Forward {
     rare1i: u8,
     rare2i: u8,
@@ -101,7 +102,6 @@ impl Forward {
 /// supports the vector functions that this function is specialized for. (For
 /// the specific vector functions used, see the Vector trait implementations.)
 #[inline(always)]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub(crate) unsafe fn fwd_find<V: Vector>(
     fwd: &Forward,
     haystack: &[u8],
@@ -216,7 +216,6 @@ pub(crate) unsafe fn fwd_find<V: Vector>(
 /// (ptr + rare1i) and (ptr + rare2i). It must also be safe to do unaligned
 /// loads on ptr up to (end_ptr - needle.len()).
 #[inline(always)]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 unsafe fn fwd_find_in_chunk<V: Vector>(
     fwd: &Forward,
     needle: &[u8],

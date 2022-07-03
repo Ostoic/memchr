@@ -41,7 +41,6 @@ use crate::memmem::{
 /// supports the vector functions that this function is specialized for. (For
 /// the specific vector functions used, see the Vector trait implementations.)
 #[inline(always)]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub(crate) unsafe fn find<V: Vector>(
     prestate: &mut PrefilterState,
     ninfo: &NeedleInfo,
@@ -118,7 +117,6 @@ pub(crate) unsafe fn find<V: Vector>(
 /// It must be safe to do an unaligned read of size(V) bytes starting at both
 /// (ptr + rare1i) and (ptr + rare2i).
 #[inline(always)]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 unsafe fn find_in_chunk2<V: Vector>(
     ptr: *const u8,
     rare1i: usize,
@@ -152,7 +150,6 @@ unsafe fn find_in_chunk2<V: Vector>(
 /// (ptr + rare1i) and (ptr + rare2i).
 #[allow(dead_code)]
 #[inline(always)]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 unsafe fn find_in_chunk3<V: Vector>(
     ptr: *const u8,
     rare1i: usize,

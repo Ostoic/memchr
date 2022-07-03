@@ -3,11 +3,13 @@ use core::cmp;
 use crate::memmem::{prefilter::Pre, util};
 
 /// Two-Way search in the forward direction.
-#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone, Copy)]
 pub(crate) struct Forward(TwoWay);
 
 /// Two-Way search in the reverse direction.
-#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone, Copy)]
 pub(crate) struct Reverse(TwoWay);
 
 /// An implementation of the TwoWay substring search algorithm, with heuristics
@@ -45,7 +47,8 @@ pub(crate) struct Reverse(TwoWay);
 ///
 /// This type is wrapped in Forward and Reverse types that expose consistent
 /// forward or reverse APIs.
-#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone, Copy)]
 struct TwoWay {
     /// A small bitset used as a quick prefilter (in addition to the faster
     /// SIMD based prefilter). Namely, a bit 'i' is set if and only if b%64==i
@@ -425,7 +428,8 @@ impl TwoWay {
 /// then we could collapse this case analysis and simplify the algorithm. The
 /// Two-Way paper suggests this is possible, but more reading is required to
 /// grok why the authors didn't pursue that path.
-#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone, Copy)]
 enum Shift {
     Small { period: usize },
     Large { shift: usize },
@@ -552,7 +556,6 @@ impl Suffix {
     }
 
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn reverse(needle: &[u8], kind: SuffixKind) -> Suffix {
         debug_assert!(!needle.is_empty());
 
@@ -593,7 +596,8 @@ impl Suffix {
 }
 
 /// The kind of suffix to extract.
-#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone, Copy)]
 enum SuffixKind {
     /// Extract the smallest lexicographic suffix from a string.
     ///
@@ -612,7 +616,8 @@ enum SuffixKind {
 }
 
 /// The result of comparing corresponding bytes between two suffixes.
-#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone, Copy)]
 enum SuffixOrdering {
     /// This occurs when the given candidate byte indicates that the candidate
     /// suffix is better than the current maximal (or minimal) suffix. That is,
@@ -655,7 +660,8 @@ impl SuffixKind {
 /// needle. If a particular byte in the haystack is NOT in this set, then one
 /// can conclude that it is also not in the needle, and thus, one can advance
 /// in the haystack by needle.len() bytes.
-#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone, Copy)]
 struct ApproximateByteSet(u64);
 
 impl ApproximateByteSet {
@@ -841,7 +847,7 @@ mod tests {
     }
 
     quickcheck! {
-             #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn qc_suffix_forward_maximal(bytes: Vec<u8>) -> bool {
                   if bytes.is_empty() {
                       return true;
@@ -852,8 +858,7 @@ mod tests {
                   got == expected
               }
 
-             #[cfg_attr(feature = "aggressive-inline", inline(always))]
-      #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn qc_suffix_reverse_maximal(bytes: Vec<u8>) -> bool {
                   if bytes.is_empty() {
                       return true;
@@ -871,7 +876,6 @@ mod simpletests {
     use super::*;
 
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn twoway_find(
         haystack: &[u8],
         needle: &[u8],
@@ -879,7 +883,6 @@ mod simpletests {
         Forward::new(needle).find_general(None, haystack, needle)
     }
 
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn twoway_rfind(
         haystack: &[u8],

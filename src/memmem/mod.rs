@@ -96,13 +96,11 @@ macro_rules! define_memmem_quickcheck_tests {
             }
 
            #[cfg_attr(feature = "aggressive-inline", inline(always))]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
  fn qc_fwd_suffix_is_substring(bs: Vec<u8>) -> bool {
                 proptests::suffix_is_substring(false, &bs, $fwd)
             }
 
            #[cfg_attr(feature = "aggressive-inline", inline(always))]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
  fn qc_fwd_matches_naive(
                 haystack: Vec<u8>,
                 needle: Vec<u8>
@@ -111,19 +109,16 @@ macro_rules! define_memmem_quickcheck_tests {
             }
 
            #[cfg_attr(feature = "aggressive-inline", inline(always))]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
  fn qc_rev_prefix_is_substring(bs: Vec<u8>) -> bool {
                 proptests::prefix_is_substring(true, &bs, $rev)
             }
 
            #[cfg_attr(feature = "aggressive-inline", inline(always))]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
  fn qc_rev_suffix_is_substring(bs: Vec<u8>) -> bool {
                 proptests::suffix_is_substring(true, &bs, $rev)
             }
 
            #[cfg_attr(feature = "aggressive-inline", inline(always))]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
  fn qc_rev_matches_naive(
                 haystack: Vec<u8>,
                 needle: Vec<u8>
@@ -364,7 +359,6 @@ impl<'h, 'n> Iterator for FindIter<'h, 'n> {
     type Item = usize;
 
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn next(&mut self) -> Option<usize> {
         if self.pos > self.haystack.len() {
             return None;
@@ -432,7 +426,6 @@ impl<'h, 'n> Iterator for FindRevIter<'h, 'n> {
     type Item = usize;
 
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn next(&mut self) -> Option<usize> {
         let pos = match self.pos {
             None => return None,
@@ -466,7 +459,8 @@ impl<'h, 'n> Iterator for FindRevIter<'h, 'n> {
 /// When the `std` feature is enabled, then this type has an `into_owned`
 /// version which permits building a `Finder` that is not connected to
 /// the lifetime of its needle.
-#[derive(Clone, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone)]
 pub struct Finder<'n> {
     searcher: Searcher<'n>,
 }
@@ -598,7 +592,8 @@ impl<'n> Finder<'n> {
 /// When the `std` feature is enabled, then this type has an `into_owned`
 /// version which permits building a `FinderRev` that is not connected to
 /// the lifetime of its needle.
-#[derive(Clone, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone)]
 pub struct FinderRev<'n> {
     searcher: SearcherRev<'n>,
 }
@@ -773,7 +768,8 @@ impl FinderBuilder {
 /// variety of parameters (CPU support, target, needle size, haystack size and
 /// even dynamic properties such as prefilter effectiveness), the actual
 /// algorithm employed to do substring search may change.
-#[derive(Clone, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone)]
 struct Searcher<'n> {
     /// The actual needle we're searching for.
     ///
@@ -796,7 +792,8 @@ struct Searcher<'n> {
 ///
 /// We group these things together because it's useful to be able to hand them
 /// to prefilters or substring algorithms that want them.
-#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone, Copy)]
 pub(crate) struct NeedleInfo {
     /// The offsets of "rare" bytes detected in the needle.
     ///
@@ -829,7 +826,8 @@ struct SearcherConfig {
     prefilter: Prefilter,
 }
 
-#[derive(Clone, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone)]
 enum SearcherKind {
     /// A special case for empty needles. An empty needle always matches, even
     /// in an empty haystack.
@@ -906,12 +904,10 @@ impl<'n> Searcher<'n> {
     }
 
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn needle(&self) -> &[u8] {
         self.needle.as_slice()
     }
 
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn as_ref(&self) -> Searcher<'_> {
         use self::SearcherKind::*;
@@ -1026,7 +1022,6 @@ impl<'n> Searcher<'n> {
     ///
     /// I suspect the main problem is that this function contains two different
     /// inlined copies of Two-Way: one with and one without prefilters enabled.
-    #[inline(never)]
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn find_tw(
         &self,
@@ -1067,7 +1062,8 @@ impl NeedleInfo {
 /// was done because it adds a lot of code, and more surface area to test. And
 /// in particular, it's not clear whether a prefilter on reverse searching is
 /// worth it. (If you have a compelling use case, please file an issue!)
-#[derive(Clone, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone)]
 struct SearcherRev<'n> {
     /// The actual needle we're searching for.
     needle: CowBytes<'n>,
@@ -1077,7 +1073,8 @@ struct SearcherRev<'n> {
     kind: SearcherRevKind,
 }
 
-#[derive(Clone, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone)]
 enum SearcherRevKind {
     /// A special case for empty needles. An empty needle always matches, even
     /// in an empty haystack.
@@ -1111,12 +1108,10 @@ impl<'n> SearcherRev<'n> {
     }
 
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn needle(&self) -> &[u8] {
         self.needle.as_slice()
     }
 
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn as_ref(&self) -> SearcherRev<'_> {
         use self::SearcherRevKind::*;

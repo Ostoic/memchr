@@ -168,7 +168,8 @@ impl core::fmt::Debug for PrefilterFn {
 /// disable its use. Nevertheless, this configuration option gives callers
 /// the ability to disable prefilters if you have knowledge that they won't be
 /// useful.
-#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone, Copy)]
 #[non_exhaustive]
 pub enum Prefilter {
     /// Never used a prefilter in substring search.
@@ -205,7 +206,8 @@ impl Prefilter {
 /// iterator is treated as a single search.) A prefilter state should only be
 /// created from a `Freqy`. e.g., An inert `Freqy` will produce an inert
 /// `PrefilterState`.
-#[derive(Clone, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone)]
 pub(crate) struct PrefilterState {
     /// The number of skips that has been executed. This is always 1 greater
     /// than the actual number of skips. The special sentinel value of 0
@@ -298,7 +300,6 @@ impl PrefilterState {
 /// is the default). In general, we try to use an AVX prefilter, followed by
 /// SSE and then followed by a generic one based on memchr.
 #[inline(always)]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub(crate) fn forward(
     config: &Prefilter,
     rare: &RareNeedleBytes,

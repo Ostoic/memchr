@@ -11,7 +11,8 @@ mod std {
 
     /// An AVX accelerated vectorized substring search routine that only works
     /// on small needles.
-    #[derive(Clone, Copy, Debug)]
+    #[cfg_attr(feature = "nosym", derive(Debug))]
+    #[derive(Clone, Copy)]
     pub(crate) struct Forward(genericsimd::Forward);
 
     impl Forward {
@@ -32,13 +33,11 @@ mod std {
         /// searcher to work. Passing a haystack with a length smaller than
         /// this will cause `find` to panic.
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         pub(crate) fn min_haystack_len(&self) -> usize {
             self.0.min_haystack_len::<__m128i>()
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         pub(crate) fn find(
             &self,
             haystack: &[u8],
@@ -58,7 +57,6 @@ mod std {
         /// Callers must ensure that the avx2 CPU feature is enabled in the
         /// current environment.
         #[target_feature(enable = "avx2")]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn find_impl(
             &self,
             haystack: &[u8],
@@ -79,7 +77,8 @@ mod std {
 mod nostd {
     use crate::memmem::NeedleInfo;
 
-    #[derive(Clone, Copy, Debug)]
+    #[cfg_attr(feature = "nosym", derive(Debug))]
+    #[derive(Clone, Copy)]
     pub(crate) struct Forward(());
 
     impl Forward {
@@ -113,7 +112,6 @@ mod nostd {
 mod tests {
     use crate::memmem::{prefilter::PrefilterState, NeedleInfo};
 
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn find(
         _: &mut PrefilterState,

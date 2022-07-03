@@ -118,7 +118,8 @@ const MEMCHR_TESTS: &[MemchrTestStatic] = &[
 ];
 
 /// A description of a test on a memchr like function.
-#[derive(Clone, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone)]
 pub struct MemchrTest {
     /// The thing to search. We use `&str` instead of `&[u8]` because they
     /// are nicer to write in tests, and we don't miss much since memchr
@@ -141,7 +142,8 @@ pub struct MemchrTest {
 }
 
 /// Like MemchrTest, but easier to define as a constant.
-#[derive(Clone, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone)]
 pub struct MemchrTestStatic {
     corpus: &'static str,
     needles: &'static [u8],
@@ -178,7 +180,6 @@ impl MemchrTest {
     }
 
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn two<F: Fn(u8, u8, &[u8]) -> Option<usize>>(
         &self,
         reverse: bool,
@@ -204,7 +205,6 @@ impl MemchrTest {
         }
     }
 
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn three<F: Fn(u8, u8, u8, &[u8]) -> Option<usize>>(
         &self,

@@ -4,7 +4,8 @@ use crate::memmem::{genericsimd, NeedleInfo};
 
 /// An SSE accelerated vectorized substring search routine that only works on
 /// small needles.
-#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "nosym", derive(Debug))]
+#[derive(Clone, Copy)]
 pub(crate) struct Forward(genericsimd::Forward);
 
 impl Forward {
@@ -45,7 +46,6 @@ impl Forward {
     /// of x86_64. It is marked as unsafe because of the target feature
     /// attribute.
     #[target_feature(enable = "sse2")]
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     unsafe fn find_impl(
         &self,
         haystack: &[u8],
@@ -59,7 +59,6 @@ impl Forward {
 mod tests {
     use crate::memmem::{prefilter::PrefilterState, NeedleInfo};
 
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn find(
         _: &mut PrefilterState,

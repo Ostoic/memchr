@@ -13,7 +13,7 @@ const LOOP_SIZE: usize = 4 * VECTOR_SIZE;
 const LOOP_SIZE2: usize = 2 * VECTOR_SIZE;
 
 #[target_feature(enable = "sse2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 pub unsafe fn memchr(n1: u8, haystack: &[u8]) -> Option<usize> {
     // What follows is a fast SSE2-only algorithm to detect the position of
     // `n1` in `haystack` if it exists. From what I know, this is the "classic"
@@ -188,7 +188,7 @@ pub unsafe fn memchr(n1: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[target_feature(enable = "sse2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 pub unsafe fn memchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
     let vn1 = _mm_set1_epi8(n1 as i8);
     let vn2 = _mm_set1_epi8(n2 as i8);
@@ -258,7 +258,7 @@ pub unsafe fn memchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[target_feature(enable = "sse2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 pub unsafe fn memchr3(
     n1: u8,
     n2: u8,
@@ -342,7 +342,7 @@ pub unsafe fn memchr3(
 }
 
 #[target_feature(enable = "sse2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 pub unsafe fn memrchr(n1: u8, haystack: &[u8]) -> Option<usize> {
     let vn1 = _mm_set1_epi8(n1 as i8);
     let len = haystack.len();
@@ -422,7 +422,7 @@ pub unsafe fn memrchr(n1: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[target_feature(enable = "sse2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 pub unsafe fn memrchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
     let vn1 = _mm_set1_epi8(n1 as i8);
     let vn2 = _mm_set1_epi8(n2 as i8);
@@ -490,7 +490,7 @@ pub unsafe fn memrchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[target_feature(enable = "sse2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 pub unsafe fn memrchr3(
     n1: u8,
     n2: u8,
@@ -572,7 +572,6 @@ pub unsafe fn memrchr3(
 }
 
 #[target_feature(enable = "sse2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub unsafe fn forward_search1(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -593,7 +592,6 @@ pub unsafe fn forward_search1(
 }
 
 #[target_feature(enable = "sse2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 unsafe fn forward_search2(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -618,7 +616,6 @@ unsafe fn forward_search2(
 }
 
 #[target_feature(enable = "sse2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub unsafe fn forward_search3(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -647,7 +644,6 @@ pub unsafe fn forward_search3(
 }
 
 #[target_feature(enable = "sse2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 unsafe fn reverse_search1(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -668,7 +664,6 @@ unsafe fn reverse_search1(
 }
 
 #[target_feature(enable = "sse2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 unsafe fn reverse_search2(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -693,7 +688,6 @@ unsafe fn reverse_search2(
 }
 
 #[target_feature(enable = "sse2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 unsafe fn reverse_search3(
     start_ptr: *const u8,
     end_ptr: *const u8,

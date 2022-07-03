@@ -94,7 +94,6 @@ mod tests {
     use super::*;
 
     #[cfg_attr(feature = "aggressive-inline", inline(always))]
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn freqy_find(haystack: &[u8], needle: &[u8]) -> Option<usize> {
         let ninfo = NeedleInfo::new(needle);
         let mut prestate = PrefilterState::new();

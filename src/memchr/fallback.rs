@@ -44,7 +44,6 @@ fn repeat_byte(b: u8) -> usize {
 }
 
 #[cfg_attr(feature = "aggressive-inline", inline(always))]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr(n1: u8, haystack: &[u8]) -> Option<usize> {
     let vn1 = repeat_byte(n1);
     let confirm = |byte| byte == n1;
@@ -291,7 +290,6 @@ pub fn memrchr3(n1: u8, n2: u8, n3: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[inline(always)]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 unsafe fn forward_search<F: Fn(u8) -> bool>(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -311,7 +309,6 @@ unsafe fn forward_search<F: Fn(u8) -> bool>(
 }
 
 #[inline(always)]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 unsafe fn reverse_search<F: Fn(u8) -> bool>(
     start_ptr: *const u8,
     end_ptr: *const u8,

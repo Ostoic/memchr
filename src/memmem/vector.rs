@@ -38,31 +38,26 @@ mod x86sse {
 
     impl Vector for __m128i {
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn splat(byte: u8) -> __m128i {
             _mm_set1_epi8(byte as i8)
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn load_unaligned(data: *const u8) -> __m128i {
             _mm_loadu_si128(data as *const __m128i)
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn movemask(self) -> u32 {
             _mm_movemask_epi8(self) as u32
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn cmpeq(self, vector2: Self) -> __m128i {
             _mm_cmpeq_epi8(self, vector2)
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn and(self, vector2: Self) -> __m128i {
             _mm_and_si128(self, vector2)
         }
@@ -76,31 +71,26 @@ mod x86avx {
 
     impl Vector for __m256i {
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn splat(byte: u8) -> __m256i {
             _mm256_set1_epi8(byte as i8)
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn load_unaligned(data: *const u8) -> __m256i {
             _mm256_loadu_si256(data as *const __m256i)
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn movemask(self) -> u32 {
             _mm256_movemask_epi8(self) as u32
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn cmpeq(self, vector2: Self) -> __m256i {
             _mm256_cmpeq_epi8(self, vector2)
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn and(self, vector2: Self) -> __m256i {
             _mm256_and_si256(self, vector2)
         }
@@ -114,31 +104,26 @@ mod wasm_simd128 {
 
     impl Vector for v128 {
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn splat(byte: u8) -> v128 {
             u8x16_splat(byte)
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn load_unaligned(data: *const u8) -> v128 {
             v128_load(data.cast())
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn movemask(self) -> u32 {
             u8x16_bitmask(self).into()
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn cmpeq(self, vector2: Self) -> v128 {
             u8x16_eq(self, vector2)
         }
 
         #[inline(always)]
-        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn and(self, vector2: Self) -> v128 {
             v128_and(self, vector2)
         }

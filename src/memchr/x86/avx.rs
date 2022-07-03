@@ -15,7 +15,6 @@ const LOOP_SIZE: usize = 4 * VECTOR_SIZE;
 const LOOP_SIZE2: usize = 2 * VECTOR_SIZE;
 
 #[target_feature(enable = "avx2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub unsafe fn memchr(n1: u8, haystack: &[u8]) -> Option<usize> {
     // For a high level explanation for how this algorithm works, see the
     // sse2 implementation. The avx implementation here is the same, but with
@@ -29,9 +28,8 @@ pub unsafe fn memchr(n1: u8, haystack: &[u8]) -> Option<usize> {
     //
     // Interestingly, I couldn't observe a similar improvement for memrchr.
     #[cold]
-    #[inline(never)]
     #[target_feature(enable = "avx2")]
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline)]
     unsafe fn matched(
         start_ptr: *const u8,
         ptr: *const u8,
@@ -121,12 +119,12 @@ pub unsafe fn memchr(n1: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[target_feature(enable = "avx2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 pub unsafe fn memchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
     #[cold]
-    #[inline(never)]
+    // #[inline(never)]
     #[target_feature(enable = "avx2")]
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline)]
     unsafe fn matched(
         start_ptr: *const u8,
         ptr: *const u8,
@@ -206,7 +204,7 @@ pub unsafe fn memchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[target_feature(enable = "avx2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 pub unsafe fn memchr3(
     n1: u8,
     n2: u8,
@@ -214,9 +212,9 @@ pub unsafe fn memchr3(
     haystack: &[u8],
 ) -> Option<usize> {
     #[cold]
-    #[inline(never)]
+    // #[inline(never)]
     #[target_feature(enable = "avx2")]
-    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline)]
     unsafe fn matched(
         start_ptr: *const u8,
         ptr: *const u8,
@@ -309,7 +307,7 @@ pub unsafe fn memchr3(
 }
 
 #[target_feature(enable = "avx2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 pub unsafe fn memrchr(n1: u8, haystack: &[u8]) -> Option<usize> {
     let vn1 = _mm256_set1_epi8(n1 as i8);
     let len = haystack.len();
@@ -389,7 +387,7 @@ pub unsafe fn memrchr(n1: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[target_feature(enable = "avx2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 pub unsafe fn memrchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
     let vn1 = _mm256_set1_epi8(n1 as i8);
     let vn2 = _mm256_set1_epi8(n2 as i8);
@@ -457,7 +455,7 @@ pub unsafe fn memrchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[target_feature(enable = "avx2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 pub unsafe fn memrchr3(
     n1: u8,
     n2: u8,
@@ -539,7 +537,7 @@ pub unsafe fn memrchr3(
 }
 
 #[target_feature(enable = "avx2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 unsafe fn forward_search1(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -560,7 +558,7 @@ unsafe fn forward_search1(
 }
 
 #[target_feature(enable = "avx2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 unsafe fn forward_search2(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -585,7 +583,7 @@ unsafe fn forward_search2(
 }
 
 #[target_feature(enable = "avx2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 unsafe fn forward_search3(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -614,7 +612,7 @@ unsafe fn forward_search3(
 }
 
 #[target_feature(enable = "avx2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 unsafe fn reverse_search1(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -635,7 +633,7 @@ unsafe fn reverse_search1(
 }
 
 #[target_feature(enable = "avx2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 unsafe fn reverse_search2(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -660,7 +658,7 @@ unsafe fn reverse_search2(
 }
 
 #[target_feature(enable = "avx2")]
-#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline)]
 unsafe fn reverse_search3(
     start_ptr: *const u8,
     end_ptr: *const u8,
