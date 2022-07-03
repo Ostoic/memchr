@@ -15,6 +15,7 @@ const _: PrefilterFnTy = find;
 /// Callers must ensure that the avx2 CPU feature is enabled in the current
 /// environment.
 #[target_feature(enable = "avx2")]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub(crate) unsafe fn find(
     prestate: &mut PrefilterState,
     ninfo: &NeedleInfo,
@@ -34,6 +35,7 @@ pub(crate) unsafe fn find(
 mod tests {
     #[test]
     #[cfg(not(miri))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn prefilter_permutations() {
         use crate::memmem::prefilter::tests::PrefilterTest;
         if !is_x86_feature_detected!("avx2") {

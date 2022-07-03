@@ -13,19 +13,22 @@ pub mod naive;
 mod x86;
 
 /// An iterator over all occurrences of the needle in a haystack.
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr_iter(needle: u8, haystack: &[u8]) -> Memchr<'_> {
     Memchr::new(needle, haystack)
 }
 
 /// An iterator over all occurrences of the needles in a haystack.
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr2_iter(needle1: u8, needle2: u8, haystack: &[u8]) -> Memchr2<'_> {
     Memchr2::new(needle1, needle2, haystack)
 }
 
 /// An iterator over all occurrences of the needles in a haystack.
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr3_iter(
     needle1: u8,
     needle2: u8,
@@ -36,13 +39,15 @@ pub fn memchr3_iter(
 }
 
 /// An iterator over all occurrences of the needle in a haystack, in reverse.
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memrchr_iter(needle: u8, haystack: &[u8]) -> Rev<Memchr<'_>> {
     Memchr::new(needle, haystack).rev()
 }
 
 /// An iterator over all occurrences of the needles in a haystack, in reverse.
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memrchr2_iter(
     needle1: u8,
     needle2: u8,
@@ -52,7 +57,8 @@ pub fn memrchr2_iter(
 }
 
 /// An iterator over all occurrences of the needles in a haystack, in reverse.
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memrchr3_iter(
     needle1: u8,
     needle2: u8,
@@ -83,7 +89,8 @@ pub fn memrchr3_iter(
 /// let haystack = b"the quick brown fox";
 /// assert_eq!(memchr(b'k', haystack), Some(8));
 /// ```
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr(needle: u8, haystack: &[u8]) -> Option<usize> {
     #[cfg(miri)]
     #[inline(always)]
@@ -147,7 +154,8 @@ pub fn memchr(needle: u8, haystack: &[u8]) -> Option<usize> {
 /// let haystack = b"the quick brown fox";
 /// assert_eq!(memchr2(b'k', b'q', haystack), Some(4));
 /// ```
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr2(needle1: u8, needle2: u8, haystack: &[u8]) -> Option<usize> {
     #[cfg(miri)]
     #[inline(always)]
@@ -200,7 +208,8 @@ pub fn memchr2(needle1: u8, needle2: u8, haystack: &[u8]) -> Option<usize> {
 /// let haystack = b"the quick brown fox";
 /// assert_eq!(memchr3(b'k', b'q', b'e', haystack), Some(2));
 /// ```
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr3(
     needle1: u8,
     needle2: u8,
@@ -256,7 +265,8 @@ pub fn memchr3(
 /// let haystack = b"the quick brown fox";
 /// assert_eq!(memrchr(b'o', haystack), Some(17));
 /// ```
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memrchr(needle: u8, haystack: &[u8]) -> Option<usize> {
     #[cfg(miri)]
     #[inline(always)]
@@ -321,7 +331,8 @@ pub fn memrchr(needle: u8, haystack: &[u8]) -> Option<usize> {
 /// let haystack = b"the quick brown fox";
 /// assert_eq!(memrchr2(b'k', b'q', haystack), Some(8));
 /// ```
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memrchr2(needle1: u8, needle2: u8, haystack: &[u8]) -> Option<usize> {
     #[cfg(miri)]
     #[inline(always)]
@@ -374,7 +385,8 @@ pub fn memrchr2(needle1: u8, needle2: u8, haystack: &[u8]) -> Option<usize> {
 /// let haystack = b"the quick brown fox";
 /// assert_eq!(memrchr3(b'k', b'q', b'e', haystack), Some(8));
 /// ```
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memrchr3(
     needle1: u8,
     needle2: u8,

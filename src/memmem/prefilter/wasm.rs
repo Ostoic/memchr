@@ -10,6 +10,7 @@ const _: PrefilterFnTy = find;
 
 /// A `v128`-accelerated candidate finder for single-substring search.
 #[target_feature(enable = "simd128")]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub(crate) fn find(
     prestate: &mut PrefilterState,
     ninfo: &NeedleInfo,
@@ -31,6 +32,7 @@ pub(crate) fn find(
 mod tests {
     #[test]
     #[cfg(not(miri))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn prefilter_permutations() {
         use crate::memmem::prefilter::tests::PrefilterTest;
         // SAFETY: super::find is safe to call for all inputs on x86.

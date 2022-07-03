@@ -10,6 +10,7 @@ pub(crate) struct Forward(genericsimd::Forward);
 impl Forward {
     /// Create a new "generic simd" forward searcher. If one could not be
     /// created from the given inputs, then None is returned.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn new(ninfo: &NeedleInfo, needle: &[u8]) -> Option<Forward> {
         if !cfg!(memchr_runtime_simd) {
             return None;
@@ -36,6 +37,7 @@ impl Forward {
 
     /// The implementation of find marked with the appropriate target feature.
     #[target_feature(enable = "simd128")]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn find_impl(&self, haystack: &[u8], needle: &[u8]) -> Option<usize> {
         unsafe { genericsimd::fwd_find::<v128>(&self.0, haystack, needle) }
     }
@@ -45,6 +47,8 @@ impl Forward {
 mod tests {
     use crate::memmem::{prefilter::PrefilterState, NeedleInfo};
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn find(
         _: &mut PrefilterState,
         ninfo: &NeedleInfo,
@@ -55,6 +59,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn prefilter_permutations() {
         use crate::memmem::prefilter::tests::PrefilterTest;
 

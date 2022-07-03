@@ -41,7 +41,8 @@ pub struct Memchr<'a> {
 
 impl<'a> Memchr<'a> {
     /// Creates a new iterator that yields all positions of needle in haystack.
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn new(needle: u8, haystack: &[u8]) -> Memchr<'_> {
         Memchr { needle: needle, haystack: haystack, position: 0 }
     }
@@ -50,19 +51,22 @@ impl<'a> Memchr<'a> {
 impl<'a> Iterator for Memchr<'a> {
     type Item = usize;
 
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn next(&mut self) -> Option<usize> {
         iter_next!(self, memchr(self.needle, self.haystack))
     }
 
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn size_hint(&self) -> (usize, Option<usize>) {
         (0, Some(self.haystack.len()))
     }
 }
 
 impl<'a> DoubleEndedIterator for Memchr<'a> {
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn next_back(&mut self) -> Option<Self::Item> {
         iter_next_back!(self, memrchr(self.needle, self.haystack))
     }
@@ -80,7 +84,8 @@ pub struct Memchr2<'a> {
 
 impl<'a> Memchr2<'a> {
     /// Creates a new iterator that yields all positions of needle in haystack.
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn new(needle1: u8, needle2: u8, haystack: &[u8]) -> Memchr2<'_> {
         Memchr2 {
             needle1: needle1,
@@ -94,19 +99,22 @@ impl<'a> Memchr2<'a> {
 impl<'a> Iterator for Memchr2<'a> {
     type Item = usize;
 
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn next(&mut self) -> Option<usize> {
         iter_next!(self, memchr2(self.needle1, self.needle2, self.haystack))
     }
 
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn size_hint(&self) -> (usize, Option<usize>) {
         (0, Some(self.haystack.len()))
     }
 }
 
 impl<'a> DoubleEndedIterator for Memchr2<'a> {
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn next_back(&mut self) -> Option<Self::Item> {
         iter_next_back!(
             self,
@@ -128,7 +136,8 @@ pub struct Memchr3<'a> {
 
 impl<'a> Memchr3<'a> {
     /// Create a new `Memchr3` that's initialized to zero with a haystack
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn new(
         needle1: u8,
         needle2: u8,
@@ -148,7 +157,8 @@ impl<'a> Memchr3<'a> {
 impl<'a> Iterator for Memchr3<'a> {
     type Item = usize;
 
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn next(&mut self) -> Option<usize> {
         iter_next!(
             self,
@@ -156,14 +166,16 @@ impl<'a> Iterator for Memchr3<'a> {
         )
     }
 
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn size_hint(&self) -> (usize, Option<usize>) {
         (0, Some(self.haystack.len()))
     }
 }
 
 impl<'a> DoubleEndedIterator for Memchr3<'a> {
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn next_back(&mut self) -> Option<Self::Item> {
         iter_next_back!(
             self,

@@ -77,6 +77,7 @@ struct TwoWay {
 impl Forward {
     /// Create a searcher that uses the Two-Way algorithm by searching forwards
     /// through any haystack.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn new(needle: &[u8]) -> Forward {
         if needle.is_empty() {
             return Forward(TwoWay::empty());
@@ -127,6 +128,7 @@ impl Forward {
     /// only useful for conveniently testing this substring implementation in
     /// isolation.
     #[cfg(test)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn find_general(
         &self,
         pre: Option<&mut Pre<'_>>,
@@ -244,6 +246,7 @@ impl Forward {
 impl Reverse {
     /// Create a searcher that uses the Two-Way algorithm by searching in
     /// reverse through any haystack.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn new(needle: &[u8]) -> Reverse {
         if needle.is_empty() {
             return Reverse(TwoWay::empty());
@@ -297,6 +300,7 @@ impl Reverse {
     /// only useful for conveniently testing this substring implementation in
     /// isolation.
     #[cfg(test)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn rfind_general(&self, haystack: &[u8], needle: &[u8]) -> Option<usize> {
         if needle.is_empty() {
             Some(haystack.len())
@@ -381,6 +385,7 @@ impl Reverse {
 }
 
 impl TwoWay {
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn empty() -> TwoWay {
         TwoWay {
             byteset: ApproximateByteSet::new(b""),
@@ -433,6 +438,7 @@ impl Shift {
     /// These can be computed by extracting both the minimal and maximal
     /// lexicographic suffixes, and choosing the right-most starting position.
     /// The lower bound on the period is then the period of the chosen suffix.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn forward(
         needle: &[u8],
         period_lower_bound: usize,
@@ -456,6 +462,7 @@ impl Shift {
     /// These can be computed by extracting both the minimal and maximal
     /// lexicographic suffixes, and choosing the left-most starting position.
     /// The lower bound on the period is then the period of the chosen suffix.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn reverse(
         needle: &[u8],
         period_lower_bound: usize,
@@ -493,6 +500,7 @@ struct Suffix {
 }
 
 impl Suffix {
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn forward(needle: &[u8], kind: SuffixKind) -> Suffix {
         debug_assert!(!needle.is_empty());
 
@@ -543,6 +551,8 @@ impl Suffix {
         suffix
     }
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn reverse(needle: &[u8], kind: SuffixKind) -> Suffix {
         debug_assert!(!needle.is_empty());
 
@@ -624,6 +634,7 @@ impl SuffixKind {
     /// Returns true if and only if the given candidate byte indicates that
     /// it should replace the current suffix as the maximal (or minimal)
     /// suffix.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn cmp(self, current: u8, candidate: u8) -> SuffixOrdering {
         use self::SuffixOrdering::*;
 
@@ -649,6 +660,7 @@ struct ApproximateByteSet(u64);
 
 impl ApproximateByteSet {
     /// Create a new set from the given needle.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn new(needle: &[u8]) -> ApproximateByteSet {
         let mut bits = 0;
         for &b in needle {
@@ -677,23 +689,27 @@ mod tests {
     );
 
     /// Convenience wrapper for computing the suffix as a byte string.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn get_suffix_forward(needle: &[u8], kind: SuffixKind) -> (&[u8], usize) {
         let s = Suffix::forward(needle, kind);
         (&needle[s.pos..], s.period)
     }
 
     /// Convenience wrapper for computing the reverse suffix as a byte string.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn get_suffix_reverse(needle: &[u8], kind: SuffixKind) -> (&[u8], usize) {
         let s = Suffix::reverse(needle, kind);
         (&needle[..s.pos], s.period)
     }
 
     /// Return all of the non-empty suffixes in the given byte string.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn suffixes(bytes: &[u8]) -> Vec<&[u8]> {
         (0..bytes.len()).map(|i| &bytes[i..]).collect()
     }
 
     /// Return the lexicographically maximal suffix of the given byte string.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn naive_maximal_suffix_forward(needle: &[u8]) -> &[u8] {
         let mut sufs = suffixes(needle);
         sufs.sort();
@@ -702,6 +718,7 @@ mod tests {
 
     /// Return the lexicographically maximal suffix of the reverse of the given
     /// byte string.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn naive_maximal_suffix_reverse(needle: &[u8]) -> Vec<u8> {
         let mut reversed = needle.to_vec();
         reversed.reverse();
@@ -711,6 +728,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn suffix_forward() {
         macro_rules! assert_suffix_min {
             ($given:expr, $expected:expr, $period:expr) => {
@@ -768,6 +786,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn suffix_reverse() {
         macro_rules! assert_suffix_min {
             ($given:expr, $expected:expr, $period:expr) => {
@@ -822,32 +841,37 @@ mod tests {
     }
 
     quickcheck! {
-        fn qc_suffix_forward_maximal(bytes: Vec<u8>) -> bool {
-            if bytes.is_empty() {
-                return true;
-            }
+             #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    fn qc_suffix_forward_maximal(bytes: Vec<u8>) -> bool {
+                  if bytes.is_empty() {
+                      return true;
+                  }
 
-            let (got, _) = get_suffix_forward(&bytes, SuffixKind::Maximal);
-            let expected = naive_maximal_suffix_forward(&bytes);
-            got == expected
-        }
+                  let (got, _) = get_suffix_forward(&bytes, SuffixKind::Maximal);
+                  let expected = naive_maximal_suffix_forward(&bytes);
+                  got == expected
+              }
 
-        fn qc_suffix_reverse_maximal(bytes: Vec<u8>) -> bool {
-            if bytes.is_empty() {
-                return true;
-            }
+             #[cfg_attr(feature = "aggressive-inline", inline(always))]
+      #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    fn qc_suffix_reverse_maximal(bytes: Vec<u8>) -> bool {
+                  if bytes.is_empty() {
+                      return true;
+                  }
 
-            let (got, _) = get_suffix_reverse(&bytes, SuffixKind::Maximal);
-            let expected = naive_maximal_suffix_reverse(&bytes);
-            expected == got
-        }
-    }
+                  let (got, _) = get_suffix_reverse(&bytes, SuffixKind::Maximal);
+                  let expected = naive_maximal_suffix_reverse(&bytes);
+                  expected == got
+              }
+          }
 }
 
 #[cfg(test)]
 mod simpletests {
     use super::*;
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn twoway_find(
         haystack: &[u8],
         needle: &[u8],
@@ -855,6 +879,8 @@ mod simpletests {
         Forward::new(needle).find_general(None, haystack, needle)
     }
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn twoway_rfind(
         haystack: &[u8],
         needle: &[u8],
@@ -869,6 +895,7 @@ mod simpletests {
     // == shift' to determine if a match occurred, but the correct guard is 'if
     // j >= shift', which matches the corresponding guard in the forward impl.
     #[test]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn regression_rev_small_period() {
         let rfind = super::simpletests::twoway_rfind;
         let haystack = "ababaz";

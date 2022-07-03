@@ -40,7 +40,8 @@ macro_rules! unsafe_ifunc {
 
         static FN: AtomicPtr<()> = AtomicPtr::new(detect as FnRaw);
 
-        fn detect($($needle: u8),+, haystack: &[u8]) -> Option<usize> {
+       #[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn detect($($needle: u8),+, haystack: &[u8]) -> Option<usize> {
             let fun =
                 if cfg!(memchr_runtime_avx) && is_x86_feature_detected!("avx2") {
                     avx::$name as FnRaw
@@ -92,11 +93,13 @@ macro_rules! unsafe_ifunc {
 }
 
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr(n1: u8, haystack: &[u8]) -> Option<usize> {
     unsafe_ifunc!(fn(u8, &[u8]) -> Option<usize>, memchr, haystack, n1)
 }
 
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
     unsafe_ifunc!(
         fn(u8, u8, &[u8]) -> Option<usize>,
@@ -108,6 +111,7 @@ pub fn memchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr3(n1: u8, n2: u8, n3: u8, haystack: &[u8]) -> Option<usize> {
     unsafe_ifunc!(
         fn(u8, u8, u8, &[u8]) -> Option<usize>,
@@ -120,11 +124,13 @@ pub fn memchr3(n1: u8, n2: u8, n3: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memrchr(n1: u8, haystack: &[u8]) -> Option<usize> {
     unsafe_ifunc!(fn(u8, &[u8]) -> Option<usize>, memrchr, haystack, n1)
 }
 
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memrchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
     unsafe_ifunc!(
         fn(u8, u8, &[u8]) -> Option<usize>,
@@ -136,6 +142,7 @@ pub fn memrchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memrchr3(n1: u8, n2: u8, n3: u8, haystack: &[u8]) -> Option<usize> {
     unsafe_ifunc!(
         fn(u8, u8, u8, &[u8]) -> Option<usize>,

@@ -92,19 +92,22 @@ fn memrchr3_fallback_find() {
 }
 
 quickcheck! {
-    fn qc_memchr1_matches_naive(n1: u8, corpus: Vec<u8>) -> bool {
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr1_matches_naive(n1: u8, corpus: Vec<u8>) -> bool {
         memchr(n1, &corpus) == naive::memchr(n1, &corpus)
     }
 }
 
 quickcheck! {
-    fn qc_memchr2_matches_naive(n1: u8, n2: u8, corpus: Vec<u8>) -> bool {
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr2_matches_naive(n1: u8, n2: u8, corpus: Vec<u8>) -> bool {
         memchr2(n1, n2, &corpus) == naive::memchr2(n1, n2, &corpus)
     }
 }
 
 quickcheck! {
-    fn qc_memchr3_matches_naive(
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr3_matches_naive(
         n1: u8, n2: u8, n3: u8,
         corpus: Vec<u8>
     ) -> bool {
@@ -113,19 +116,22 @@ quickcheck! {
 }
 
 quickcheck! {
-    fn qc_memrchr1_matches_naive(n1: u8, corpus: Vec<u8>) -> bool {
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memrchr1_matches_naive(n1: u8, corpus: Vec<u8>) -> bool {
         memrchr(n1, &corpus) == naive::memrchr(n1, &corpus)
     }
 }
 
 quickcheck! {
-    fn qc_memrchr2_matches_naive(n1: u8, n2: u8, corpus: Vec<u8>) -> bool {
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memrchr2_matches_naive(n1: u8, n2: u8, corpus: Vec<u8>) -> bool {
         memrchr2(n1, n2, &corpus) == naive::memrchr2(n1, n2, &corpus)
     }
 }
 
 quickcheck! {
-    fn qc_memrchr3_matches_naive(
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memrchr3_matches_naive(
         n1: u8, n2: u8, n3: u8,
         corpus: Vec<u8>
     ) -> bool {

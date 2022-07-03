@@ -17,6 +17,7 @@ mod std {
     impl Forward {
         /// Create a new "generic simd" forward searcher. If one could not be
         /// created from the given inputs, then None is returned.
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         pub(crate) fn new(
             ninfo: &NeedleInfo,
             needle: &[u8],
@@ -31,11 +32,13 @@ mod std {
         /// searcher to work. Passing a haystack with a length smaller than
         /// this will cause `find` to panic.
         #[inline(always)]
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         pub(crate) fn min_haystack_len(&self) -> usize {
             self.0.min_haystack_len::<__m128i>()
         }
 
         #[inline(always)]
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         pub(crate) fn find(
             &self,
             haystack: &[u8],
@@ -55,6 +58,7 @@ mod std {
         /// Callers must ensure that the avx2 CPU feature is enabled in the
         /// current environment.
         #[target_feature(enable = "avx2")]
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn find_impl(
             &self,
             haystack: &[u8],
@@ -79,6 +83,7 @@ mod nostd {
     pub(crate) struct Forward(());
 
     impl Forward {
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         pub(crate) fn new(
             ninfo: &NeedleInfo,
             needle: &[u8],
@@ -86,10 +91,14 @@ mod nostd {
             None
         }
 
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         pub(crate) fn min_haystack_len(&self) -> usize {
             unreachable!()
         }
 
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         pub(crate) fn find(
             &self,
             haystack: &[u8],
@@ -104,6 +113,8 @@ mod nostd {
 mod tests {
     use crate::memmem::{prefilter::PrefilterState, NeedleInfo};
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn find(
         _: &mut PrefilterState,
         ninfo: &NeedleInfo,
@@ -114,6 +125,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn prefilter_permutations() {
         use crate::memmem::prefilter::tests::PrefilterTest;
 

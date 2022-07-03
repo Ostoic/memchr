@@ -116,11 +116,13 @@ impl PrefilterFn {
     /// for all inputs in the current environment. For example, if the given
     /// prefilter function uses AVX instructions, then the caller must ensure
     /// that the appropriate AVX CPU features are enabled.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) unsafe fn new(prefn: PrefilterFnTy) -> PrefilterFn {
         PrefilterFn(prefn)
     }
 
     /// Call the underlying prefilter function with the given arguments.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn call(
         self,
         prestate: &mut PrefilterState,
@@ -135,6 +137,7 @@ impl PrefilterFn {
 }
 
 impl core::fmt::Debug for PrefilterFn {
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         "<prefilter-fn(...)>".fmt(f)
     }
@@ -177,12 +180,14 @@ pub enum Prefilter {
 }
 
 impl Default for Prefilter {
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn default() -> Prefilter {
         Prefilter::Auto
     }
 }
 
 impl Prefilter {
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn is_none(&self) -> bool {
         match *self {
             Prefilter::None => true,
@@ -227,18 +232,21 @@ impl PrefilterState {
     const MIN_SKIP_BYTES: u32 = 8;
 
     /// Create a fresh prefilter state.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn new() -> PrefilterState {
         PrefilterState { skips: 1, skipped: 0 }
     }
 
     /// Create a fresh prefilter state that is always inert.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn inert() -> PrefilterState {
         PrefilterState { skips: 0, skipped: 0 }
     }
 
     /// Update this state with the number of bytes skipped on the last
     /// invocation of the prefilter.
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn update(&mut self, skipped: usize) {
         self.skips = self.skips.saturating_add(1);
         // We need to do this dance since it's technically possible for
@@ -253,7 +261,8 @@ impl PrefilterState {
 
     /// Return true if and only if this state indicates that a prefilter is
     /// still effective.
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn is_effective(&mut self) -> bool {
         if self.is_inert() {
             return false;
@@ -270,12 +279,14 @@ impl PrefilterState {
         false
     }
 
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn is_inert(&self) -> bool {
         self.skips == 0
     }
 
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn skips(&self) -> u32 {
         self.skips.saturating_sub(1)
     }
@@ -287,6 +298,7 @@ impl PrefilterState {
 /// is the default). In general, we try to use an AVX prefilter, followed by
 /// SSE and then followed by a generic one based on memchr.
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub(crate) fn forward(
     config: &Prefilter,
     rare: &RareNeedleBytes,
@@ -346,6 +358,7 @@ pub(crate) fn forward(
 ///
 /// We keep it around for now in case we want to bring it back.
 #[allow(dead_code)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub(crate) fn minimum_len(_haystack: &[u8], needle: &[u8]) -> usize {
     // If the haystack length isn't greater than needle.len() * FACTOR, then
     // no prefilter will be used. The presumption here is that since there
@@ -400,6 +413,7 @@ pub(crate) mod tests {
         ///
         /// Callers must ensure that the given prefilter function pointer is
         /// safe to call for all inputs in the current environment.
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         pub(crate) unsafe fn run_all_tests(prefn: PrefilterFnTy) {
             PrefilterTest::run_all_tests_filter(prefn, |_| true)
         }
@@ -411,6 +425,7 @@ pub(crate) mod tests {
         ///
         /// Callers must ensure that the given prefilter function pointer is
         /// safe to call for all inputs in the current environment.
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         pub(crate) unsafe fn run_all_tests_filter(
             prefn: PrefilterFnTy,
             mut predicate: impl FnMut(&PrefilterTest) -> bool,
@@ -430,6 +445,7 @@ pub(crate) mod tests {
         /// If a valid test could not be constructed, then None is returned.
         /// (Currently, we take the approach of massaging tests to be valid
         /// instead of rejecting them outright.)
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         fn new(
             seed: PrefilterTestSeed,
             rare1i: usize,
@@ -477,6 +493,7 @@ pub(crate) mod tests {
         ///
         /// Callers must ensure that the given prefilter function pointer is
         /// safe to call for all inputs in the current environment.
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         unsafe fn run(&self, prefn: PrefilterFnTy) {
             let mut prestate = PrefilterState::new();
             assert_eq!(

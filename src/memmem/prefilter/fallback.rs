@@ -46,6 +46,7 @@ const _: PrefilterFnTy = find;
 ///
 /// This should only be used when Freqy is constructed for forward
 /// searching.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub(crate) fn find(
     prestate: &mut PrefilterState,
     ninfo: &NeedleInfo,
@@ -92,6 +93,8 @@ pub(crate) fn find(
 mod tests {
     use super::*;
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn freqy_find(haystack: &[u8], needle: &[u8]) -> Option<usize> {
         let ninfo = NeedleInfo::new(needle);
         let mut prestate = PrefilterState::new();
@@ -99,6 +102,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn freqy_forward() {
         assert_eq!(Some(0), freqy_find(b"BARFOO", b"BAR"));
         assert_eq!(Some(3), freqy_find(b"FOOBAR", b"BAR"));
@@ -112,6 +116,7 @@ mod tests {
 
     #[test]
     #[cfg(not(miri))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn prefilter_permutations() {
         use crate::memmem::prefilter::tests::PrefilterTest;
 

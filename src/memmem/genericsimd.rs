@@ -61,6 +61,7 @@ pub(crate) struct Forward {
 impl Forward {
     /// Create a new "generic simd" forward searcher. If one could not be
     /// created from the given inputs, then None is returned.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn new(ninfo: &NeedleInfo, needle: &[u8]) -> Option<Forward> {
         let (rare1i, rare2i) = ninfo.rarebytes.as_rare_ordered_u8();
         // If the needle is too short or too long, give up. Also, give up
@@ -100,6 +101,7 @@ impl Forward {
 /// supports the vector functions that this function is specialized for. (For
 /// the specific vector functions used, see the Vector trait implementations.)
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub(crate) unsafe fn fwd_find<V: Vector>(
     fwd: &Forward,
     haystack: &[u8],
@@ -214,6 +216,7 @@ pub(crate) unsafe fn fwd_find<V: Vector>(
 /// (ptr + rare1i) and (ptr + rare2i). It must also be safe to do unaligned
 /// loads on ptr up to (end_ptr - needle.len()).
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 unsafe fn fwd_find_in_chunk<V: Vector>(
     fwd: &Forward,
     needle: &[u8],
@@ -260,6 +263,7 @@ fn matched(start_ptr: *const u8, ptr: *const u8, chunki: usize) -> usize {
 
 /// Subtract `b` from `a` and return the difference. `a` must be greater than
 /// or equal to `b`.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 fn diff(a: *const u8, b: *const u8) -> usize {
     debug_assert!(a >= b);
     (a as usize) - (b as usize)

@@ -43,6 +43,8 @@ fn repeat_byte(b: u8) -> usize {
     (b as usize) * (usize::MAX / 255)
 }
 
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr(n1: u8, haystack: &[u8]) -> Option<usize> {
     let vn1 = repeat_byte(n1);
     let confirm = |byte| byte == n1;
@@ -82,6 +84,7 @@ pub fn memchr(n1: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 /// Like `memchr`, but searches for two bytes instead of one.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
     let vn1 = repeat_byte(n1);
     let vn2 = repeat_byte(n2);
@@ -122,6 +125,7 @@ pub fn memchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 /// Like `memchr`, but searches for three bytes instead of one.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr3(n1: u8, n2: u8, n3: u8, haystack: &[u8]) -> Option<usize> {
     let vn1 = repeat_byte(n1);
     let vn2 = repeat_byte(n2);
@@ -165,6 +169,7 @@ pub fn memchr3(n1: u8, n2: u8, n3: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 /// Return the last index matching the byte `x` in `text`.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memrchr(n1: u8, haystack: &[u8]) -> Option<usize> {
     let vn1 = repeat_byte(n1);
     let confirm = |byte| byte == n1;
@@ -203,6 +208,7 @@ pub fn memrchr(n1: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 /// Like `memrchr`, but searches for two bytes instead of one.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memrchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
     let vn1 = repeat_byte(n1);
     let vn2 = repeat_byte(n2);
@@ -242,6 +248,7 @@ pub fn memrchr2(n1: u8, n2: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 /// Like `memrchr`, but searches for three bytes instead of one.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memrchr3(n1: u8, n2: u8, n3: u8, haystack: &[u8]) -> Option<usize> {
     let vn1 = repeat_byte(n1);
     let vn2 = repeat_byte(n2);
@@ -284,6 +291,7 @@ pub fn memrchr3(n1: u8, n2: u8, n3: u8, haystack: &[u8]) -> Option<usize> {
 }
 
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 unsafe fn forward_search<F: Fn(u8) -> bool>(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -303,6 +311,7 @@ unsafe fn forward_search<F: Fn(u8) -> bool>(
 }
 
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 unsafe fn reverse_search<F: Fn(u8) -> bool>(
     start_ptr: *const u8,
     end_ptr: *const u8,
@@ -323,6 +332,7 @@ unsafe fn reverse_search<F: Fn(u8) -> bool>(
 
 /// Subtract `b` from `a` and return the difference. `a` should be greater than
 /// or equal to `b`.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 fn sub(a: *const u8, b: *const u8) -> usize {
     debug_assert!(a >= b);
     (a as usize) - (b as usize)

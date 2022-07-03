@@ -5,12 +5,14 @@
 
 /// Returns true if and only if needle is a prefix of haystack.
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub(crate) fn is_prefix(haystack: &[u8], needle: &[u8]) -> bool {
     needle.len() <= haystack.len() && memcmp(&haystack[..needle.len()], needle)
 }
 
 /// Returns true if and only if needle is a suffix of haystack.
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub(crate) fn is_suffix(haystack: &[u8], needle: &[u8]) -> bool {
     needle.len() <= haystack.len()
         && memcmp(&haystack[haystack.len() - needle.len()..], needle)
@@ -29,6 +31,7 @@ pub(crate) fn is_suffix(haystack: &[u8], needle: &[u8]) -> bool {
 /// inlined for better codegen (like Rabin-Karp). In that case, callers are
 /// advised to create a non-inlineable wrapper routine that calls memcmp.
 #[inline(always)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub(crate) fn memcmp(x: &[u8], y: &[u8]) -> bool {
     if x.len() != y.len() {
         return false;

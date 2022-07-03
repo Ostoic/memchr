@@ -38,12 +38,14 @@ impl RareNeedleBytes {
     /// Create a new pair of rare needle bytes with the given offsets. This is
     /// only used in tests for generating input data.
     #[cfg(all(test, feature = "std"))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn new(rare1i: u8, rare2i: u8) -> RareNeedleBytes {
         RareNeedleBytes { rare1i, rare2i }
     }
 
     /// Detect the leftmost offsets of the two rarest bytes in the given
     /// needle.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn forward(needle: &[u8]) -> RareNeedleBytes {
         if needle.len() <= 1 || needle.len() > core::u8::MAX as usize {
             // For needles bigger than u8::MAX, our offsets aren't big enough.
@@ -88,6 +90,7 @@ impl RareNeedleBytes {
     /// Return the rare bytes in the given needle in the forward direction.
     /// The needle given must be the same one given to the RareNeedleBytes
     /// constructor.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn as_rare_bytes(&self, needle: &[u8]) -> (u8, u8) {
         (needle[self.rare1i as usize], needle[self.rare2i as usize])
     }
@@ -97,6 +100,7 @@ impl RareNeedleBytes {
     /// rare1 is rarer than rare2, but just wants to ensure that they are
     /// ordered with respect to one another.
     #[cfg(memchr_runtime_simd)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn as_rare_ordered_usize(&self) -> (usize, usize) {
         let (rare1i, rare2i) = self.as_rare_ordered_u8();
         (rare1i as usize, rare2i as usize)
@@ -105,6 +109,7 @@ impl RareNeedleBytes {
     /// Like as_rare_ordered_usize, but returns the offsets as their native
     /// u8 values.
     #[cfg(memchr_runtime_simd)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn as_rare_ordered_u8(&self) -> (u8, u8) {
         if self.rare1i <= self.rare2i {
             (self.rare1i, self.rare2i)
@@ -116,6 +121,7 @@ impl RareNeedleBytes {
     /// Return the rare offsets as usize values in the order in which they were
     /// constructed. rare1, for example, is constructed as the "rarer" byte,
     /// and thus, callers may want to treat it differently from rare2.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn as_rare_usize(&self) -> (usize, usize) {
         (self.rare1i as usize, self.rare2i as usize)
     }
@@ -123,6 +129,7 @@ impl RareNeedleBytes {
     /// Return the byte frequency rank of each byte. The higher the rank, the
     /// more frequency the byte is predicted to be. The needle given must be
     /// the same one given to the RareNeedleBytes constructor.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn as_ranks(&self, needle: &[u8]) -> (usize, usize) {
         let (b1, b2) = self.as_rare_bytes(needle);
         (rank(b1), rank(b2))
@@ -131,6 +138,7 @@ impl RareNeedleBytes {
 
 /// Return the heuristical frequency rank of the given byte. A lower rank
 /// means the byte is believed to occur less frequently.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 fn rank(b: u8) -> usize {
     crate::memmem::byte_frequencies::BYTE_FREQUENCIES[b as usize] as usize
 }

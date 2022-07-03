@@ -49,7 +49,8 @@ fn memrchr3_iter() {
 }
 
 quickcheck! {
-    fn qc_memchr_double_ended_iter(
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr_double_ended_iter(
         needle: u8, data: Vec<u8>, take_side: Vec<bool>
     ) -> bool {
         // make nonempty
@@ -63,7 +64,9 @@ quickcheck! {
         all_found.iter().cloned().eq(positions1(needle, &data))
     }
 
-    fn qc_memchr2_double_ended_iter(
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr2_double_ended_iter(
         needle1: u8, needle2: u8, data: Vec<u8>, take_side: Vec<bool>
     ) -> bool {
         // make nonempty
@@ -77,7 +80,9 @@ quickcheck! {
         all_found.iter().cloned().eq(positions2(needle1, needle2, &data))
     }
 
-    fn qc_memchr3_double_ended_iter(
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr3_double_ended_iter(
         needle1: u8, needle2: u8, needle3: u8,
         data: Vec<u8>, take_side: Vec<bool>
     ) -> bool {
@@ -95,33 +100,43 @@ quickcheck! {
             .eq(positions3(needle1, needle2, needle3, &data))
     }
 
-    fn qc_memchr1_iter(data: Vec<u8>) -> bool {
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr1_iter(data: Vec<u8>) -> bool {
         let needle = 0;
         let answer = positions1(needle, &data);
         answer.eq(Memchr::new(needle, &data))
     }
 
-    fn qc_memchr1_rev_iter(data: Vec<u8>) -> bool {
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr1_rev_iter(data: Vec<u8>) -> bool {
         let needle = 0;
         let answer = positions1(needle, &data);
         answer.rev().eq(Memchr::new(needle, &data).rev())
     }
 
-    fn qc_memchr2_iter(data: Vec<u8>) -> bool {
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr2_iter(data: Vec<u8>) -> bool {
         let needle1 = 0;
         let needle2 = 1;
         let answer = positions2(needle1, needle2, &data);
         answer.eq(Memchr2::new(needle1, needle2, &data))
     }
 
-    fn qc_memchr2_rev_iter(data: Vec<u8>) -> bool {
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr2_rev_iter(data: Vec<u8>) -> bool {
         let needle1 = 0;
         let needle2 = 1;
         let answer = positions2(needle1, needle2, &data);
         answer.rev().eq(Memchr2::new(needle1, needle2, &data).rev())
     }
 
-    fn qc_memchr3_iter(data: Vec<u8>) -> bool {
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr3_iter(data: Vec<u8>) -> bool {
         let needle1 = 0;
         let needle2 = 1;
         let needle3 = 2;
@@ -129,7 +144,9 @@ quickcheck! {
         answer.eq(Memchr3::new(needle1, needle2, needle3, &data))
     }
 
-    fn qc_memchr3_rev_iter(data: Vec<u8>) -> bool {
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr3_rev_iter(data: Vec<u8>) -> bool {
         let needle1 = 0;
         let needle2 = 1;
         let needle3 = 2;
@@ -137,7 +154,9 @@ quickcheck! {
         answer.rev().eq(Memchr3::new(needle1, needle2, needle3, &data).rev())
     }
 
-    fn qc_memchr1_iter_size_hint(data: Vec<u8>) -> bool {
+   #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_memchr1_iter_size_hint(data: Vec<u8>) -> bool {
         // test that the size hint is within reasonable bounds
         let needle = 0;
         let mut iter = Memchr::new(needle, &data);

@@ -14,6 +14,7 @@ fn main() {
 // how to work with SSE2 operands. Enabling SSE4.2 and AVX on SSE2-only targets
 // is not a problem. In that case, the fastest option will be chosen at
 // runtime.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 fn enable_simd_optimizations() {
     if is_env_set("CARGO_CFG_MEMCHR_DISABLE_AUTO_SIMD") {
         return;
@@ -50,6 +51,7 @@ fn enable_simd_optimizations() {
 // known bad platform. For example, wasm32 doesn't have a libc and the
 // performance of memchr on Windows is seemingly worse than the fallback
 // implementation.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 fn enable_libc() {
     const NO_ARCH: &'static [&'static str] = &["wasm32", "windows"];
     const NO_ENV: &'static [&'static str] = &["sgx"];

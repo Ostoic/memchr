@@ -1,6 +1,7 @@
 use std::iter::repeat;
 
 /// Create a sequence of tests that should be run by memchr implementations.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn memchr_tests() -> Vec<MemchrTest> {
     let mut tests = Vec::new();
     for statict in MEMCHR_TESTS {
@@ -148,6 +149,7 @@ pub struct MemchrTestStatic {
 }
 
 impl MemchrTest {
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn one<F: Fn(u8, &[u8]) -> Option<usize>>(&self, reverse: bool, f: F) {
         let needles = match self.needles(1) {
             None => return,
@@ -175,6 +177,8 @@ impl MemchrTest {
         }
     }
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn two<F: Fn(u8, u8, &[u8]) -> Option<usize>>(
         &self,
         reverse: bool,
@@ -200,6 +204,8 @@ impl MemchrTest {
         }
     }
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn three<F: Fn(u8, u8, u8, &[u8]) -> Option<usize>>(
         &self,
         reverse: bool,
@@ -226,6 +232,7 @@ impl MemchrTest {
         }
     }
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn iter_one<'a, I, F>(&'a self, reverse: bool, f: F)
     where
         F: FnOnce(u8, &'a [u8]) -> I,
@@ -236,6 +243,7 @@ impl MemchrTest {
         }
     }
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn iter_two<'a, I, F>(&'a self, reverse: bool, f: F)
     where
         F: FnOnce(u8, u8, &'a [u8]) -> I,
@@ -246,6 +254,7 @@ impl MemchrTest {
         }
     }
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn iter_three<'a, I, F>(&'a self, reverse: bool, f: F)
     where
         F: FnOnce(u8, u8, u8, &'a [u8]) -> I,
@@ -280,6 +289,7 @@ impl MemchrTest {
     ///
     /// Note that we extend the corpus by adding `%` bytes, which we
     /// don't otherwise use as a needle.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn expand(&self) -> Vec<MemchrTest> {
         let mut more = Vec::new();
 
@@ -307,6 +317,7 @@ impl MemchrTest {
     ///
     /// If the alignment exceeds the length of the corpus, then this returns
     /// an empty slice.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn corpus(&self, align: usize) -> &str {
         self.corpus.get(align..).unwrap_or("")
     }
@@ -316,6 +327,7 @@ impl MemchrTest {
     /// matches `count`. If this test has more than `count` needles, then
     /// return `None` (because there is no way to use this test data for a
     /// search using fewer needles).
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn needles(&self, count: usize) -> Option<Vec<u8>> {
         if self.needles.len() > count {
             return None;
@@ -334,6 +346,7 @@ impl MemchrTest {
     /// If alignment is given, then all positions greater than or equal to that
     /// alignment are offset by the alignment. Positions less than the
     /// alignment are dropped.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn positions(&self, align: usize, reverse: bool) -> Vec<usize> {
         let positions = if reverse {
             let mut positions = self.positions.to_vec();

@@ -90,30 +90,41 @@ macro_rules! define_memmem_quickcheck_tests {
         use crate::memmem::proptests;
 
         quickcheck::quickcheck! {
-            fn qc_fwd_prefix_is_substring(bs: Vec<u8>) -> bool {
+           #[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_fwd_prefix_is_substring(bs: Vec<u8>) -> bool {
                 proptests::prefix_is_substring(false, &bs, $fwd)
             }
 
-            fn qc_fwd_suffix_is_substring(bs: Vec<u8>) -> bool {
+           #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_fwd_suffix_is_substring(bs: Vec<u8>) -> bool {
                 proptests::suffix_is_substring(false, &bs, $fwd)
             }
 
-            fn qc_fwd_matches_naive(
+           #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_fwd_matches_naive(
                 haystack: Vec<u8>,
                 needle: Vec<u8>
             ) -> bool {
                 proptests::matches_naive(false, &haystack, &needle, $fwd)
             }
 
-            fn qc_rev_prefix_is_substring(bs: Vec<u8>) -> bool {
+           #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_rev_prefix_is_substring(bs: Vec<u8>) -> bool {
                 proptests::prefix_is_substring(true, &bs, $rev)
             }
 
-            fn qc_rev_suffix_is_substring(bs: Vec<u8>) -> bool {
+           #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_rev_suffix_is_substring(bs: Vec<u8>) -> bool {
                 proptests::suffix_is_substring(true, &bs, $rev)
             }
 
-            fn qc_rev_matches_naive(
+           #[cfg_attr(feature = "aggressive-inline", inline(always))]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
+ fn qc_rev_matches_naive(
                 haystack: Vec<u8>,
                 needle: Vec<u8>
             ) -> bool {
@@ -134,11 +145,13 @@ macro_rules! define_memmem_simple_tests {
         use crate::memmem::testsimples;
 
         #[test]
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         fn simple_forward() {
             testsimples::run_search_tests_fwd($fwd);
         }
 
         #[test]
+        #[cfg_attr(feature = "aggressive-inline", inline(always))]
         fn simple_reverse() {
             testsimples::run_search_tests_rev($rev);
         }
@@ -255,7 +268,8 @@ pub fn rfind_iter<'h, 'n, N: 'n + ?Sized + AsRef<[u8]>>(
 /// assert_eq!(Some(4), memmem::find(haystack, b"bar"));
 /// assert_eq!(None, memmem::find(haystack, b"quux"));
 /// ```
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn find(haystack: &[u8], needle: &[u8]) -> Option<usize> {
     if haystack.len() < 64 {
         rabinkarp::find(haystack, needle)
@@ -292,7 +306,8 @@ pub fn find(haystack: &[u8], needle: &[u8]) -> Option<usize> {
 /// assert_eq!(Some(8), memmem::rfind(haystack, b"ba"));
 /// assert_eq!(None, memmem::rfind(haystack, b"quux"));
 /// ```
-#[inline]
+#[cfg_attr(not(feature = "aggressive-inline"), inline)]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub fn rfind(haystack: &[u8], needle: &[u8]) -> Option<usize> {
     if haystack.len() < 64 {
         rabinkarp::rfind(haystack, needle)
@@ -333,7 +348,8 @@ impl<'h, 'n> FindIter<'h, 'n> {
     ///
     /// This is only available when the `std` feature is enabled.
     #[cfg(feature = "std")]
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn into_owned(self) -> FindIter<'h, 'static> {
         FindIter {
             haystack: self.haystack,
@@ -347,6 +363,8 @@ impl<'h, 'n> FindIter<'h, 'n> {
 impl<'h, 'n> Iterator for FindIter<'h, 'n> {
     type Item = usize;
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn next(&mut self) -> Option<usize> {
         if self.pos > self.haystack.len() {
             return None;
@@ -399,7 +417,8 @@ impl<'h, 'n> FindRevIter<'h, 'n> {
     ///
     /// This is only available when the `std` feature is enabled.
     #[cfg(feature = "std")]
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn into_owned(self) -> FindRevIter<'h, 'static> {
         FindRevIter {
             haystack: self.haystack,
@@ -412,6 +431,8 @@ impl<'h, 'n> FindRevIter<'h, 'n> {
 impl<'h, 'n> Iterator for FindRevIter<'h, 'n> {
     type Item = usize;
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn next(&mut self) -> Option<usize> {
         let pos = match self.pos {
             None => return None,
@@ -481,6 +502,7 @@ impl<'n> Finder<'n> {
     /// assert_eq!(Some(4), Finder::new("bar").find(haystack));
     /// assert_eq!(None, Finder::new("quux").find(haystack));
     /// ```
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn find(&self, haystack: &[u8]) -> Option<usize> {
         self.searcher.find(&mut self.searcher.prefilter_state(), haystack)
     }
@@ -511,7 +533,8 @@ impl<'n> Finder<'n> {
     /// assert_eq!(Some(16), it.next());
     /// assert_eq!(None, it.next());
     /// ```
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn find_iter<'a, 'h>(
         &'a self,
         haystack: &'h [u8],
@@ -527,7 +550,8 @@ impl<'n> Finder<'n> {
     ///
     /// This is only available when the `std` feature is enabled.
     #[cfg(feature = "std")]
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn into_owned(self) -> Finder<'static> {
         Finder { searcher: self.searcher.into_owned() }
     }
@@ -542,7 +566,8 @@ impl<'n> Finder<'n> {
     /// needle itself. Namely, a finder's needle can be either borrowed or
     /// owned, so the lifetime of the needle returned must necessarily be the
     /// shorter of the two.
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn as_ref(&self) -> Finder<'_> {
         Finder { searcher: self.searcher.as_ref() }
     }
@@ -553,7 +578,8 @@ impl<'n> Finder<'n> {
     /// of the finder, and may be shorter than the `'n` lifetime. Namely, a
     /// finder's needle can be either borrowed or owned, so the lifetime of the
     /// needle returned must necessarily be the shorter of the two.
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn needle(&self) -> &[u8] {
         self.searcher.needle()
     }
@@ -611,6 +637,7 @@ impl<'n> FinderRev<'n> {
     /// assert_eq!(Some(4), FinderRev::new("bar").rfind(haystack));
     /// assert_eq!(None, FinderRev::new("quux").rfind(haystack));
     /// ```
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn rfind<B: AsRef<[u8]>>(&self, haystack: B) -> Option<usize> {
         self.searcher.rfind(haystack.as_ref())
     }
@@ -642,7 +669,8 @@ impl<'n> FinderRev<'n> {
     /// assert_eq!(Some(0), it.next());
     /// assert_eq!(None, it.next());
     /// ```
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn rfind_iter<'a, 'h>(
         &'a self,
         haystack: &'h [u8],
@@ -658,7 +686,8 @@ impl<'n> FinderRev<'n> {
     ///
     /// This is only available when the `std` feature is enabled.
     #[cfg(feature = "std")]
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn into_owned(self) -> FinderRev<'static> {
         FinderRev { searcher: self.searcher.into_owned() }
     }
@@ -673,7 +702,8 @@ impl<'n> FinderRev<'n> {
     /// needle itself. Namely, a finder's needle can be either borrowed or
     /// owned, so the lifetime of the needle returned must necessarily be the
     /// shorter of the two.
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn as_ref(&self) -> FinderRev<'_> {
         FinderRev { searcher: self.searcher.as_ref() }
     }
@@ -684,7 +714,8 @@ impl<'n> FinderRev<'n> {
     /// of the finder, and may be shorter than the `'n` lifetime. Namely, a
     /// finder's needle can be either borrowed or owned, so the lifetime of the
     /// needle returned must necessarily be the shorter of the two.
-    #[inline]
+    #[cfg_attr(not(feature = "aggressive-inline"), inline)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn needle(&self) -> &[u8] {
         self.searcher.needle()
     }
@@ -702,6 +733,7 @@ pub struct FinderBuilder {
 
 impl FinderBuilder {
     /// Create a new finder builder with default settings.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn new() -> FinderBuilder {
         FinderBuilder::default()
     }
@@ -728,6 +760,7 @@ impl FinderBuilder {
     ///
     /// See the documentation for [`Prefilter`] for more discussion on why
     /// you might want to configure this.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub fn prefilter(&mut self, prefilter: Prefilter) -> &mut FinderBuilder {
         self.config.prefilter = prefilter;
         self
@@ -817,6 +850,7 @@ enum SearcherKind {
 }
 
 impl<'n> Searcher<'n> {
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn new(config: SearcherConfig, needle: &'n [u8]) -> Searcher<'n> {
         use self::SearcherKind::*;
 
@@ -862,6 +896,7 @@ impl<'n> Searcher<'n> {
     ///
     /// This always initializes a valid (but possibly inert) prefilter state
     /// even if this searcher does not have a prefilter enabled.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn prefilter_state(&self) -> PrefilterState {
         if self.prefn.is_none() {
             PrefilterState::inert()
@@ -870,10 +905,14 @@ impl<'n> Searcher<'n> {
         }
     }
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn needle(&self) -> &[u8] {
         self.needle.as_slice()
     }
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn as_ref(&self) -> Searcher<'_> {
         use self::SearcherKind::*;
 
@@ -899,6 +938,7 @@ impl<'n> Searcher<'n> {
     }
 
     #[cfg(feature = "std")]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn into_owned(self) -> Searcher<'static> {
         use self::SearcherKind::*;
 
@@ -987,6 +1027,7 @@ impl<'n> Searcher<'n> {
     /// I suspect the main problem is that this function contains two different
     /// inlined copies of Two-Way: one with and one without prefilters enabled.
     #[inline(never)]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn find_tw(
         &self,
         tw: &twoway::Forward,
@@ -1010,6 +1051,7 @@ impl<'n> Searcher<'n> {
 }
 
 impl NeedleInfo {
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn new(needle: &[u8]) -> NeedleInfo {
         NeedleInfo {
             rarebytes: RareNeedleBytes::forward(needle),
@@ -1050,6 +1092,7 @@ enum SearcherRevKind {
 }
 
 impl<'n> SearcherRev<'n> {
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn new(needle: &'n [u8]) -> SearcherRev<'n> {
         use self::SearcherRevKind::*;
 
@@ -1067,10 +1110,14 @@ impl<'n> SearcherRev<'n> {
         }
     }
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn needle(&self) -> &[u8] {
         self.needle.as_slice()
     }
 
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn as_ref(&self) -> SearcherRev<'_> {
         use self::SearcherRevKind::*;
 
@@ -1087,6 +1134,7 @@ impl<'n> SearcherRev<'n> {
     }
 
     #[cfg(feature = "std")]
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn into_owned(self) -> SearcherRev<'static> {
         use self::SearcherRevKind::*;
 
@@ -1142,6 +1190,7 @@ mod proptests {
     define_memmem_quickcheck_tests!(super::find, super::rfind);
 
     /// Check that every prefix of the given byte string is a substring.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn prefix_is_substring(
         reverse: bool,
         bs: &[u8],
@@ -1162,6 +1211,7 @@ mod proptests {
     }
 
     /// Check that every suffix of the given byte string is a substring.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn suffix_is_substring(
         reverse: bool,
         bs: &[u8],
@@ -1183,6 +1233,7 @@ mod proptests {
 
     /// Check that naive substring search matches the result of the given search
     /// algorithm.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn matches_naive(
         reverse: bool,
         haystack: &[u8],
@@ -1197,6 +1248,7 @@ mod proptests {
     }
 
     /// Naively search forwards for the given needle in the given haystack.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn naive_find(haystack: &[u8], needle: &[u8]) -> Option<usize> {
         if needle.is_empty() {
             return Some(0);
@@ -1212,6 +1264,7 @@ mod proptests {
     }
 
     /// Naively search in reverse for the given needle in the given haystack.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     fn naive_rfind(haystack: &[u8], needle: &[u8]) -> Option<usize> {
         if needle.is_empty() {
             return Some(haystack.len());
@@ -1283,6 +1336,7 @@ mod testsimples {
     /// accepts a haystack and a needle and returns the starting position
     /// of the first occurrence of needle in the haystack, or `None` if one
     /// doesn't exist.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn run_search_tests_fwd(
         mut search: impl FnMut(&[u8], &[u8]) -> Option<usize>,
     ) {
@@ -1303,6 +1357,7 @@ mod testsimples {
     /// accepts a haystack and a needle and returns the starting position of
     /// the last occurrence of needle in the haystack, or `None` if one doesn't
     /// exist.
+    #[cfg_attr(feature = "aggressive-inline", inline(always))]
     pub(crate) fn run_search_tests_rev(
         mut search: impl FnMut(&[u8], &[u8]) -> Option<usize>,
     ) {

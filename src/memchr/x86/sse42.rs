@@ -20,6 +20,7 @@ const CONTROL_ANY: i32 = _SIDD_UBYTE_OPS
     | _SIDD_LEAST_SIGNIFICANT;
 
 #[target_feature(enable = "sse4.2")]
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 pub unsafe fn memchr3(
     n1: u8,
     n2: u8,
@@ -66,6 +67,7 @@ pub unsafe fn memchr3(
 
 /// Subtract `b` from `a` and return the difference. `a` should be greater than
 /// or equal to `b`.
+#[cfg_attr(feature = "aggressive-inline", inline(always))]
 fn sub(a: *const u8, b: *const u8) -> usize {
     debug_assert!(a >= b);
     (a as usize) - (b as usize)
